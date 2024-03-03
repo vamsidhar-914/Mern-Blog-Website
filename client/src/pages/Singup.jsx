@@ -85,7 +85,7 @@ export default function Singup() {
           </div>
           <Button gradientDuoTone='purpleToPink' type="submit" disabled={loading}>
         
-            {loading ? (
+            {loading == true ? (
               <>
               <Spinner size='sm'/>
               <span className="pl-3">loading...</span>

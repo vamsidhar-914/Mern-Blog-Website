@@ -3,6 +3,8 @@ const express = require("express")
 const mongoose = require('mongoose')
 const app = express()
 const AuthRoutes = require('./routes/auth')
+const cookieParser = require('cookie-parser')
+const userRoutes = require("./routes/users")
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => {
@@ -18,6 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }))
+app.use(cookieParser())
 
 app.listen(3000,() => {
     console.log("server is running on port 3000");
@@ -26,6 +29,7 @@ app.listen(3000,() => {
 
 // app.use("/api/user" , userRoutes)
 app.use("/api/auth" , AuthRoutes)
+app.use("/api/users" , userRoutes)
 
 
 // middleware for error handler

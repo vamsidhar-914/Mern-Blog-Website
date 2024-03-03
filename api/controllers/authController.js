@@ -42,7 +42,7 @@ const login = async(req,res,next) => {
         }
         const token = jwt.sign(
             {
-                userId : validUser._id,
+                id : validUser._id,
             }, process.env.SECRET
         )
         const { password : pass , ...others } = validUser._doc
