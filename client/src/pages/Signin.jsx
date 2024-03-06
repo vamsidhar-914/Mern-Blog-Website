@@ -34,7 +34,7 @@ export default function Signin() {
       }
       if(res.ok){
         dispatch(LoginSuccess(data))
-        navigate('/')
+        navigate('/dashboard?tab=profile')
       }
     }catch(error){
       dispatch(LoginFailure(error.message))

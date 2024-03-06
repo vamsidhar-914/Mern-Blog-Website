@@ -8,6 +8,9 @@ import Header from "./components/Header"
 import Projects from "./pages/Projects"
 import Footer from "./components/Footer"
 import ProtectedRoutes from "./components/ProtectedRoutes"
+import CreatePosts from "./pages/CreatePosts"
+import PostPage from "./pages/PostPage"
+import UpdatePost from "./pages/UpdatePost"
 
 export default function App() {
   return (
@@ -19,7 +22,10 @@ export default function App() {
         <Route path="/login" element={<Signin />}/>
         <Route path="/register" element={<Singup />}/>
         <Route element={<ProtectedRoutes />}>
-        <Route path="/dashboard" element={<Dashboard />}/>
+            <Route path="/dashboard" element={<Dashboard />}/>
+            <Route path="/create-post" element={<CreatePosts />}/>
+            <Route path="/post/:postSlug" element={<PostPage />}/>
+            <Route path="/updatePost/:postId" element={<UpdatePost />}/>
         </Route>
         <Route path="/project" element={<Projects />}/>
       </Routes>

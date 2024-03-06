@@ -5,6 +5,7 @@ const app = express()
 const AuthRoutes = require('./routes/auth')
 const cookieParser = require('cookie-parser')
 const userRoutes = require("./routes/users")
+const postRoutes = require("./routes/posts")
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => {
@@ -30,6 +31,7 @@ app.listen(3000,() => {
 // app.use("/api/user" , userRoutes)
 app.use("/api/auth" , AuthRoutes)
 app.use("/api/users" , userRoutes)
+app.use("/api/posts" , postRoutes)
 
 
 // middleware for error handler

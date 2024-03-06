@@ -16,7 +16,7 @@ const verifyToken = (req,res,next) => {
 }
 
 const verifyUser = (req,res,next) => {
-    verifyJWT(req,res, () => {
+    verifyToken(req,res,() => {
         if(req.user.id === req.params.id || req.user.isAdmin){
             next()
         } else{
@@ -25,4 +25,14 @@ const verifyUser = (req,res,next) => {
     })
 }
 
-module.exports = { verifyToken }
+const verifyAdmin = (req,res,next) => {
+    verifyJWT(req,res, () => {
+        if(req.user.isAdmin){
+            next()
+        }else{
+            return next(createError(403 , "You are not authorized"))
+        }
+    })
+}
+
+module.exports = { verifyToken , verifyUser}

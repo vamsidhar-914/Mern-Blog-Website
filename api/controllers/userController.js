@@ -36,7 +36,7 @@ const updateUser = async (req,res) => {
 }
 
 const deleteUser = async(req,res,next) => {
-    if(req.user.id !== req.params.id){
+    if(!req.user.isAdmin && req.user.id !== req.params.id){
         return next(createError(403,'You are not allowed to delete this user'))
     }
     try{
@@ -55,4 +55,44 @@ const logoutUser = (req,res,next) => {
     }
 }
 
-module.exports = { updateUser , deleteUser , logoutUser }
+const getUsers = async(req,res,next) => {
+    if(!req.user.isAdmin){
+        return next(createError(403 , 'You are not allowed'))
+    }
+    try{
+        const startIndex = parseInt(req.query.startIndex) || 10
+        const limit = parseInt(req.query.limit) || 9;
+        const sortDirection = req.query.sort === "asc" ? 1 : -1
+
+        const users = await User.find()
+            // .sort({ createdAt : sortDirection })
+            // .skip(startIndex)
+            // .limit(limit)
+
+            const usersWithOutPassword = users.map((user) => {
+                const { password , ...rest } = user._doc;
+                return rest;
+            })
+            const totalUsers = await User.countDocuments()
+
+            const now = new Date()
+            const oneMonthAgo = new Date(
+                now.getFullYear(),
+                now.getMonth() -1,
+                now.getDate()
+            )
+            const lastMonthUsers = await User.countDocuments({
+                createdAt : { $gte : oneMonthAgo }
+            })
+            res.status(200).json({
+                users : usersWithOutPassword,
+                totalUsers,
+                lastMonthUsers
+            })
+        
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports = { updateUser , deleteUser , logoutUser , getUsers }

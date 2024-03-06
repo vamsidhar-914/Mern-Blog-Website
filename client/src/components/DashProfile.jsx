@@ -1,4 +1,5 @@
 import { Alert, Button, Modal, TextInput } from "flowbite-react"
+import { Link } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import { storage } from "../firebase"
@@ -9,18 +10,19 @@ import { HiOutlineExclamationCircle } from "react-icons/hi"
 
 
 const DashProfile = () => {
-    const { currentUser  , error} = useSelector(state => state.user)
+    const { currentUser  , error , loading} = useSelector(state => state.user)
     const [imageFile , setImageFile] = useState(null)
     const [imageURL , setimageURL] = useState(null)
     const [uploadProgress , setuplaodProgress ] = useState(null)
     const [uplaodError , setuploadError] = useState(null)
+    const [imageFileUploading , setimageFileUplaoding] = useState(null)
     const [updateSuccess , setupdateSuccess] = useState(null)
     const [updateError , setupdateError] = useState(null)
     const [showModal , setshowModel] = useState(false)
     const [formdata , setformdata] = useState([])
     const dispatch = useDispatch()
-    
     const filepickerRef = useRef()
+
     const handleImageChange = (e) => {
       const file = e.target.files[0]
       if(file) {
@@ -31,6 +33,8 @@ const DashProfile = () => {
 
     useEffect(() => {
       const uploadimage = () => {
+        setimageFileUplaoding(true);
+        setuploadError(null)
         const name = new Date().getTime() + imageFile.name
         const storageRef =ref(storage , name)
         const uploadTask = uploadBytesResumable(storageRef , imageFile)
@@ -53,10 +57,12 @@ const DashProfile = () => {
           },
           (error) => {
             setuploadError(error)
+            setimageFileUplaoding(false)
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               setformdata((prev) => ({...prev ,profilePicture : downloadURL }))
+              setimageFileUplaoding(false)
             })
           }
         )
@@ -106,17 +112,17 @@ const DashProfile = () => {
     const handleFormChange = (e) => {
       setformdata({...formdata , [e.target.id] : e.target.value})
     }
-    
+    console.log(formdata)
     const handleSubmit = async (e) => {
       e.preventDefault();
       if(Object.keys(formdata).length === 0){
         setupdateError("No changes made")
         return;
       }
-      // if(imageFileUploading) {
-      // setupdateError("please wait for image to be uploaded")
-      // return
-      //}
+      if(imageFileUploading) {
+      setupdateError("please wait for image to be uploaded")
+      return
+      }
       try{
         dispatch(updateStart())
         const res = await fetch(`/api/users/update/${currentUser._id}` , {
@@ -190,7 +196,18 @@ const DashProfile = () => {
         <TextInput type="text" id="username" placeholder="username" defaultValue={currentUser.username} onChange={handleFormChange} />
         <TextInput type="email" id="email" placeholder="email" defaultValue={currentUser.email}  onChange={handleFormChange}/>
         <TextInput type="password" id="password" placeholder="password"  onChange={handleFormChange}/>
-        <Button type="submit" gradientDuoTone='purpleToPink'>Update</Button>
+        <Button type="submit" gradientDuoTone='purpleToPink' outline disabled={loading || imageFileUploading}>
+          {loading ? "loading..." : "update"}
+        </Button>
+        <Link to="/create-post">
+        <Button type="button" gradientDuoTone="purpleToPink" className="w-full">
+          {currentUser.isAdmin ? (
+            <span>Create Posts</span>
+          ) : (
+            <span>create Your Posts</span>
+          )}
+        </Button>
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={() => setshowModel(true)} className="text-red-500 cursor-pointer">Delete Account</span>
