@@ -11,10 +11,12 @@ import ProtectedRoutes from "./components/ProtectedRoutes"
 import CreatePosts from "./pages/CreatePosts"
 import PostPage from "./pages/PostPage"
 import UpdatePost from "./pages/UpdatePost"
+import ScrolltoTop from "./components/ScrolltoTop"
 
 export default function App() {
   return (
     <BrowserRouter>
+    <ScrolltoTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />}/>
@@ -24,10 +26,10 @@ export default function App() {
         <Route element={<ProtectedRoutes />}>
             <Route path="/dashboard" element={<Dashboard />}/>
             <Route path="/create-post" element={<CreatePosts />}/>
-            <Route path="/post/:postSlug" element={<PostPage />}/>
             <Route path="/updatePost/:postId" element={<UpdatePost />}/>
         </Route>
         <Route path="/project" element={<Projects />}/>
+        <Route path="/post/:postSlug" element={<PostPage />}/>
       </Routes>
       <Footer />
     </BrowserRouter>
