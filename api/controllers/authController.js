@@ -9,12 +9,13 @@ const register = async(req, res,next) => {
     if(!username || !email || !password || username === "" || email === '' || password === ''){
         return res.status(400).json({message : "all fields are required"})
     }
-    const hashedPassword = await bcrypt.hash(password , 10)
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(req.body.password , salt)
 
     const newUser = new User({
         username,
         email,
-        password : hashedPassword
+        password : hash
     })
     try{
         await newUser.save()

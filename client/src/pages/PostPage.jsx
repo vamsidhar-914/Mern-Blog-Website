@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import CallToAction from "../components/CallToAction"
 import CommentSection from "../components/CommentSection"
+import PostCard from "../components/PostCard"
 
 
 const PostPage = () => {
@@ -11,6 +12,7 @@ const PostPage = () => {
   const [loading , setloading] = useState(true)
   const [error , setError] = useState(false)
   const [post, setpost] = useState(null)
+  const [articles , setarticles] = useState(null)
   
 
   useEffect(() => {
@@ -36,11 +38,31 @@ const PostPage = () => {
     }
     fetchPost()
   },[postSlug])
+  
+ 
+
+  useEffect(() => {
+    try{
+      const fetchPosts = async() => {
+        const res = await fetch("/api/posts/allPosts?limit=3")
+        const data = await res.json()
+        console.log(data)
+        if(res.ok){
+          setarticles(data.posts)
+        }
+      }
+      fetchPosts()
+    }catch(err){
+      console.log(err.message)
+    }
+  },[])
+
   if(loading) return (
     <div className="flex justify-center items-center min-h-screen">
       <Spinner size='xl'  />
     </div>
   )
+
   return (
     <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
@@ -61,6 +83,18 @@ const PostPage = () => {
         <CallToAction />
       </div>
       <CommentSection  postId={post._id} />
+
+      <div className="flex flex-col justify-center items-center mb-5">
+        <h1 className="text-xl mt-5">Recent articles</h1>
+        <div className="flex flex-wrap gap-4 mt-5 justify-center ">
+          {
+            articles && 
+            articles.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))
+          }
+        </div>
+      </div>
     </main>
   )
 }

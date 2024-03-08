@@ -16,15 +16,13 @@ const UpdatePost = () => {
     const [publishError , setpublishError] = useState(null)
     const { postId } = useParams()
     const navigate = useNavigate()
-   
+    
     useEffect(() => {
-       
         try{  
             const fetchData = async() => {
-                const res = await fetch(`/api/posts/allPosts/?=${postId}`)
+            const res = await fetch(`/api/posts/allPosts/?postId=${postId}`)
             const data = await res.json()
             if(!res.ok){
-                console.log(data.message)
                 setpublishError(data.message)
                 return;
             }
@@ -136,7 +134,7 @@ const UpdatePost = () => {
               </Alert>
             )}
             {formdata.image && (
-              <img 
+                <img 
                 src={formdata.image}
                 alt='upload'
                 className='w-full h-72 object-cover'

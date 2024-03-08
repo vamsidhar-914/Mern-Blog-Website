@@ -20,13 +20,12 @@ const updateUser = async (req,res) => {
     // }
     try{
         const updatedUser = await User.findByIdAndUpdate(req.params.id , {
-            $set : req.body
-            // $set : {
-            //     // username : req.body.username,
-            //     // email : req.body.email,
-            //     // profilePicture : req.body.profilePicture,
-            //     // password : req.body.password
-            // }
+            $set : {
+                username : req.body.username,
+                email : req.body.email,
+                profilePicture : req.body.profilePicture,
+                password : req.body.password
+            }
         } , { new : true })
         const { password , ...rest } = updatedUser._doc
         res.status(200).json(rest)
@@ -64,10 +63,10 @@ const getUsers = async(req,res,next) => {
         const limit = parseInt(req.query.limit) || 9;
         const sortDirection = req.query.sort === "asc" ? 1 : -1
 
-        const users = await User.find()
+        const users = await User.find().limit(limit)
             // .sort({ createdAt : sortDirection })
             // .skip(startIndex)
-            // .limit(limit)
+            // .limit(limit);
 
             const usersWithOutPassword = users.map((user) => {
                 const { password , ...rest } = user._doc;

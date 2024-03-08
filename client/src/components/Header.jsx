@@ -60,7 +60,6 @@ export default function Header() {
                   alt='user'
                   img={currentUser.profilePicture}
                   rounded
-                  
                 />
               }
             >
