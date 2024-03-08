@@ -17,8 +17,6 @@ mongoose.connect(process.env.MONGO_URL)
     console.log(err)
 })
 
-const __dirname = path.resolve()
-
 // middleware
 app.use(express.json())
 app.use(express.urlencoded({
