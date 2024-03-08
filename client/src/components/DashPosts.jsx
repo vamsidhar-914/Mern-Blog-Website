@@ -17,7 +17,6 @@ const DashPosts = () => {
             try{
                 const res = await fetch(`/api/posts/allPosts/`) // userId = ${current._id}
                 const data = await res.json()
-                console.log(data.posts)
                 if(res.ok){
                     setuserPosts(data.posts)
                     if(data.posts.length < 9){
@@ -27,6 +26,23 @@ const DashPosts = () => {
             }catch(err){
                 console.log(err.message)
             }
+        }
+        const fetchuserPosts = async() => {
+            try{
+                const res = await fetch(`/api/posts/allPosts/?userId=${currentUser._id}`)
+                const data = await res.json()
+                if(res.ok){
+                    setuserPosts(data.posts)
+                    if(data.posts.length < 9){
+                        setShowMore(false)
+                    }
+                }
+            }catch(err){
+                console.log(err.message)
+            }
+        }
+        if(currentUser && !currentUser.isAdmin){
+            fetchuserPosts()
         }
         if(currentUser.isAdmin){
             fetchPosts()
@@ -70,8 +86,15 @@ const DashPosts = () => {
   return (
 
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+        <h1 className='p-3 text-center text-gray-500 text-sm'>
+            {currentUser.isAdmin ? (
+                "All Posts"
+            ) : (
+                "My Posts"
+            )}
+        </h1>
         {/* add currenetUser.isAdmin if u want to only for admin  */}
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {currentUser && userPosts.length > 0 ? (
         <>
         <Table hoverable className='shadow-md'>
             <Table.Head>
@@ -131,7 +154,9 @@ const DashPosts = () => {
         </>
       ) : (
         <p>You have no posts yet!</p>
-      ) }
+      )}
+
+      
       <Modal show={showModal} onClose={() => setshowModal(false)} popup size='md'>
         <Modal.Header />
         <Modal.Body>

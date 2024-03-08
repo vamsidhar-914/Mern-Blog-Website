@@ -112,7 +112,7 @@ const DashProfile = () => {
     const handleFormChange = (e) => {
       setformdata({...formdata , [e.target.id] : e.target.value})
     }
-    console.log(formdata)
+    
     
     const handleSubmit = async (e) => {
       e.preventDefault();

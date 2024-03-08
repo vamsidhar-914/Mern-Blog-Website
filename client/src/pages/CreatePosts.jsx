@@ -15,8 +15,7 @@ const CreatePosts = () => {
     const [formdata , setformdata ] = useState([])
     const [publishError , setpublishError] = useState(null)
     const navigate = useNavigate()
-    console.log(currentUser._id)
-
+    
 
     const handleUploadImage = async(e) =>{
         try{
@@ -34,7 +33,7 @@ const CreatePosts = () => {
                 const progress = 
                   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                   setimageUploadProgress(progress.toFixed(0))
-                console.log("upload is" + progress + "% done")
+                // console.log("upload is" + progress + "% done")
                 switch(snapshot.state){
                   case "paused":
                     console.log('upload is paused');

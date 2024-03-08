@@ -1,16 +1,28 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
 import { AiOutlineSearch } from "react-icons/ai"
-import { Link, useLocation } from 'react-router-dom' 
+import { Link, useLocation, useNavigate } from 'react-router-dom' 
 import { FaMoon ,  FaSun } from 'react-icons/fa'
 import { useSelector , useDispatch } from 'react-redux'  
 import { toggleTheme } from '../redux/themeSlice'
 import { logoutSuccess } from '../redux/userSlice'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
   const path = useLocation().pathname;
+  const location = useLocation()
   const dispatch= useDispatch()
   const { currentUser } = useSelector(state => state.user)
   const { theme } = useSelector(state => state.theme)
+  const [searchTerm , setsearchTerm ] = useState('')
+  const navigate= useNavigate()
+
+  useEffect(() => {
+    const urlparams = new URLSearchParams(location.search)
+    const searchTermfromUrl = urlparams.get('searchTerm')
+    if(searchTermfromUrl){
+      setsearchTerm(searchTermfromUrl)
+    }
+  },[location.search])
 
   // handlelogout
   const handleLogout = async () => {
@@ -29,6 +41,14 @@ export default function Header() {
     }
   }
 
+  const handlesearch = (e) => {
+    e.preventDefault()
+    const urlparams = new URLSearchParams(location.search)
+    urlparams.set('searchTerm' , searchTerm)
+    const searchQuery = urlparams.toString()
+    navigate(`/search/?${searchQuery}`)
+  }
+
 
   return (
     <Navbar className='border-b-2'>
@@ -36,12 +56,14 @@ export default function Header() {
             <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white' >vamsi's</span>
             Blog
         </Link>
-        <form>
+        <form onSubmit={handlesearch} >
           <TextInput 
             type='text'
             placeholder='Search...'
             rightIcon={AiOutlineSearch}
             className='hidden lg:inline'
+            value={searchTerm}
+            onChange={(e) => setsearchTerm(e.target.value)}
           />
         </form>
         <Button className='w-12 h-10 lg:hidden' color='gray' pill>
@@ -60,6 +82,7 @@ export default function Header() {
                   alt='user'
                   img={currentUser.profilePicture}
                   rounded
+                  className='object-cover'
                 />
               }
             >
@@ -67,6 +90,12 @@ export default function Header() {
                 <span className='block text-sm'>@{currentUser.username}</span>
                 <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
               </Dropdown.Header>
+              {currentUser.isAdmin && (
+                <Link to={'/dashboard?tab=dash'}>
+                <Dropdown.Item>Dashboard</Dropdown.Item>
+              </Link>
+              )}
+              {currentUser.isAdmin && <Dropdown.Divider />}
               <Link to={'/dashboard?tab=profile'}>
                 <Dropdown.Item>Profile</Dropdown.Item>
               </Link>

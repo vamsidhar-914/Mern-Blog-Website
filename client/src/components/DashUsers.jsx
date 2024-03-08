@@ -30,7 +30,7 @@ const DashUsers = () => {
             }catch(err){
                 console.log(err)
             }
-        }
+        }  
         if(currentUser.isAdmin){
             fetchUsers()
         }
