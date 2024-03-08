@@ -52,7 +52,7 @@ const DashPosts = () => {
     const handleClickMore = async() => {
         const startIndex = userPosts.length
         try{
-            const res = await fetch(`/api/posts/allPosts/userId=${currentUser._id}&startIndex=${startIndex}`)
+            const res = await fetch(`/api/posts/allPosts/?userId=${currentUser._id}&startIndex=${startIndex}`)
             const data = await res.json()
             if(res.ok){
                 setuserPosts((prev) => [...prev , ...data.posts])
