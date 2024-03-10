@@ -118,13 +118,13 @@ const DashUsers = () => {
                 </Table.Body>
             ))}
         </Table>
-        {
+        {/* {
             showMore && (
                 <button onClick={handleClickMore} className='w-full text-teal-500 self-center texxt-sm py-7'>
                     show more
                 </button>
             )
-        }
+        } */}
         </>
       ) : (
         <p>No users to display!</p>
