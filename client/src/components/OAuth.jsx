@@ -38,7 +38,7 @@ export default function OAuth() {
 
   return (
     <div>
-      <Button className='w-96' type='button' gradientDuoTone='pinkToOrange' outline onClick={handlleGoogleClick}>
+      <Button className='sm:w-96' type='button' gradientDuoTone='pinkToOrange' outline onClick={handlleGoogleClick}>
         <AiFillGoogleCircle className='w-6 h-6 mr-2'/>
         Continue with Google
       </Button>

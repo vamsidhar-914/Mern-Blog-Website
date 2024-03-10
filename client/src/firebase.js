@@ -4,7 +4,7 @@ import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_KEY,
+  apiKey: import.meta.env.VITE_FIREBASE_KEY || "mock_key",
   authDomain: "blog-50862.firebaseapp.com",
   projectId: "blog-50862",
   storageBucket: "blog-50862.appspot.com",
