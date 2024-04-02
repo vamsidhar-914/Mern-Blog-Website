@@ -17,12 +17,12 @@ const register = async (req, res, next) => {
     return next(createError(400, "All fields are required"));
   }
 
-  const foundUser = await User.findOne({ username });
-  const foundEmail = await User.findOne({ email });
+  //   const foundUser = await User.findOne({ username });
+  //   const foundEmail = await User.findOne({ email });
 
-  if (foundUser || foundEmail) {
-    return next(createError(400, "user already exists"));
-  }
+  //   if (foundUser || foundEmail) {
+  //     return next(createError(400, "user already exists"));
+  //   }
 
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(req.body.password, salt);
